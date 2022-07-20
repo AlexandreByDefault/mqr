@@ -35,11 +35,12 @@ type Props ={
   export const Label = styled.label`
   font-size: 1.25em;
   font-weight: 700;
-  color: white;
-  background-color: black;
+  color: black;
+  background-color:none;
   display: inline-block;
+  text-align:center;
   &:hover{
-    background-color: red;
+    color:green;
     cursor:pointer;
     outline: 1px dotted #000;
 }
@@ -49,6 +50,7 @@ type Props ={
 	height: 0.1px;
 	opacity: 0;
 	position: absolute;
-  ${Label}
+  text-align:center;
+  border:20px solid blue;
 	
   `
