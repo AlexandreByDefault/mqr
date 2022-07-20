@@ -21,12 +21,19 @@ interface HickingProps {
 
 
 const AdminForm = () => {
-  const [value, setValue]=useState<FileList | null >(null)
+  const [value, setValue]=useState<FileList | null>(null)
   const { register, handleSubmit, reset } = useForm<HickingProps>({})
-  let label: string|number = ''
-  if(value){
+  
+  let label: string = ''
+  
+ if (value !== null ){
+   if(value['length'] > 1){
+     label =` ${value.length} Selected`
+   }else if(value.length === 1){
     label = value[0].name
+   }
   }
+
 
   const onSubmit = () => {
   }
@@ -50,7 +57,7 @@ const AdminForm = () => {
         </WrapperForm>
         <WrapperForm flex>
           <Label htmlFor="image" >{label? label:  'choose a image'}</Label>
-          <InputFile type="file" onChange={e => setValue(e.currentTarget.files)} />
+          <InputFile type="file" {...register("image")} onChange={e => setValue(e.currentTarget.files)} multiple accept='Image/*' />
    
           <label htmlFor="description">Description : </label>
           <textarea {...register("description")} rows={6} cols={50}></textarea>
