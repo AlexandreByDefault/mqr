@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ContainerForm, WrapperForm, Input, Button, Label, InputFile } from './AdminStyledForm'
 import { useForm } from "react-hook-form"
 import { ToastContainer, toast } from 'react-toastify';
 
 import style from './style.module.css'
+import { stat } from 'fs/promises';
 
 
 interface HickingProps {
@@ -18,24 +19,16 @@ interface HickingProps {
   image: string
 }
 
-const AdminForm = () => {
-  const { register, handleSubmit, reset } = useForm<HickingProps>({
-    defaultValues: {
-      name: '',
-      image: '',
-      location: '',
-      distance: 0,
-      duration: 0,
-      altitude: 0,
-      difficulty: '',
-      description: '',
-      tips: '',
 
-    }
-  })
+const AdminForm = () => {
+  const [value, setValue]=useState<FileList | null >(null)
+  const { register, handleSubmit, reset } = useForm<HickingProps>({})
+  let label: string|number = ''
+  if(value){
+    label = value[0].name
+  }
 
   const onSubmit = () => {
-
   }
 
   return (
@@ -56,8 +49,9 @@ const AdminForm = () => {
           <Input w type="number" step={0.1} min={0} />
         </WrapperForm>
         <WrapperForm flex>
-          <label htmlFor="image" >Choose a file</label>
-          <InputFile type="file" {...register("image")}/>
+          <Label htmlFor="image" >{label? label:  'choose a image'}</Label>
+          <InputFile type="file" onChange={e => setValue(e.currentTarget.files)} />
+   
           <label htmlFor="description">Description : </label>
           <textarea {...register("description")} rows={6} cols={50}></textarea>
           <label htmlFor="description">tips : </label>
