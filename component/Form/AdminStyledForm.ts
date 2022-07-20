@@ -46,11 +46,10 @@ type Props ={
 }
   `
   export const InputFile = styled.input`
-  width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	position: absolute;
-  text-align:center;
-  border:20px solid blue;
-	
+  height: 0.1px;
+  opacity: 0;
+  position: absolute;
+  border: 10px solid blue;
+  /* text-align: center; */
+  accent-color: ;
   `
