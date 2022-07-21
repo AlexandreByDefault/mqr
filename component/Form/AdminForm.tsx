@@ -16,7 +16,7 @@ interface HickingProps {
   description: string
   tips: string
   difficulty: Difficulty
-  image: string
+  image: FileList
 }
 
 
@@ -34,59 +34,80 @@ const AdminForm = ({ difficulty }: HickingProps) => {
       label = value[0].name
     }
   }
-
+  
   const onSubmit = async (_data: HickingProps) => {
-    const { data, error } = await supabase
+    let dataKey = ""
+    const { data } = await supabase
+      .storage
+      .from('hiking_picture')
+      .upload(`public/${Date.now() + '-' + _data.image[0]?.name}`, _data.image[0], {
+        cacheControl: '3600',
+        upsert: false
+      })
+  
+      if(data){
+        dataKey = data.Key
+      }
+   
+    
+    const { error } = await supabase
       .from('hiking')
       .insert([
-        { name: _data.name ,
-         location: _data.location ,
-         starting_point: _data.starting_point,
-         difficulty: _data.difficulty ,
-         altitude: _data.altitude ,
-         duration: _data.duration ,
-         distance: _data.distance ,
-         description: _data.description,
-         tips: _data.tips}
-      ]) 
+        {
+          name: _data.name,
+          location: _data.location,
+          starting_point: _data.starting_point,
+          difficulty: _data.difficulty,
+          altitude: _data.altitude,
+          duration: _data.duration,
+          distance: _data.distance,
+          description: _data.description,
+          tips: _data.tips,
+          image_url: [dataKey,]
+        
+        }
+      ])
+        console.log(dataKey)
+      
   }
+
   return (
 
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <ContainerForm>
-          <WrapperForm >
-            <label htmlFor="name">Nom : </label>
-            <Input type="text" {...register('name')} />
-            <label htmlFor="localisation">Localisation</label>
-            <Input type="text" {...register("location")} />
-          </WrapperForm>
-          <WrapperForm  >
-            <label htmlFor="distance">Distance : </label>
-            <Input w type="number" {...register("distance")} step={0.1} min={0} />
-            <label htmlFor="duration"> Durée : </label>
-            <Input w type="number"  {...register("duration")} step={0.1} min={0} />
-            <label htmlFor="altitude">Altitude : </label>
-            <Input w type="number" {...register("altitude")} step={0.1} min={0} />
-          </WrapperForm>
-          <WrapperForm flex>
-            <Label htmlFor="image" >{label ? label : 'choose a image'}</Label>
-            <InputFile type="file" {...register("image")} onChange={e => setValue(e.currentTarget.files)} multiple accept='Image/*' />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <ContainerForm>
+        <WrapperForm >
+          <label htmlFor="name">Nom : </label>
+          <Input type="text" {...register('name')} />
+          <label htmlFor="localisation">Localisation</label>
+          <Input type="text" {...register("location")} />
+        </WrapperForm>
+        <WrapperForm  >
+          <label htmlFor="distance">Distance : </label>
+          <Input w type="number" {...register("distance")} step={0.1} min={0} />
+          <label htmlFor="duration"> Durée : </label>
+          <Input w type="number"  {...register("duration")} step={0.1} min={0} />
+          <label htmlFor="altitude">Altitude : </label>
+          <Input w type="number" {...register("altitude")} step={0.1} min={0} />
+        </WrapperForm>
+        <WrapperForm flex>
+          <Label htmlFor="image" >{label ? label : 'choose a image'}</Label>
+          <InputFile type="file" {...register("image")} onChange={e => setValue(e.currentTarget.files)} multiple accept='Image/*' />
 
-            <select {...register("difficulty")}>
-              <option value={"Difficile"}> Difficile</option>
-              <option value={"Moyen"}> Moyen</option>
-              <option value={"Facile"}> Difficile</option>
-            </select>
+          <select {...register("difficulty")}>
+            <option value={"Difficile"}> Difficile</option>
+            <option value={"Moyen"}> Moyen</option>
+            <option value={"Facile"}> Difficile</option>
+          </select>
 
-            <label htmlFor="description">Description : </label>
-            <textarea {...register("description")} rows={6} cols={50}></textarea>
-            <label htmlFor="tips">tips : </label>
-            <textarea {...register("tips")} rows={6} cols={50}></textarea>
-          </WrapperForm>
-          <Button>submit</Button>
-        </ContainerForm>
-      </form>
+          <label htmlFor="description">Description : </label>
+          <textarea {...register("description")} rows={6} cols={50}></textarea>
+          <label htmlFor="tips">tips : </label>
+          <textarea {...register("tips")} rows={6} cols={50}></textarea>
+        </WrapperForm>
+        <Button>submit</Button>
+      </ContainerForm>
+    </form>
   )
 }
 
