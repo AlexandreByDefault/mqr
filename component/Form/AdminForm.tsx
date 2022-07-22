@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ContainerForm, WrapperForm, Input, Button, Label, InputFile } from './AdminStyledForm'
 import { useForm } from "react-hook-form"
+
 import { ToastContainer, toast } from 'react-toastify';
 import { supabase } from '../client/supabase.client';
 
@@ -56,7 +57,9 @@ const AdminForm = ({ difficulty }: HickingProps) => {
     }
     if (Error) {
       console.log(Error)
+      toast.error('not send')
     }
+    toast.success('data send')
 
     //send row in table 
 
@@ -76,8 +79,9 @@ const AdminForm = ({ difficulty }: HickingProps) => {
       }])
     if (error) {
       console.log(error)
+      toast.error('not send')
     }
-    toast('ok')
+    
 
   }
 
