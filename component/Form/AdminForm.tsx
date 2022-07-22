@@ -28,7 +28,7 @@ const AdminForm = ({ difficulty }: HickingProps) => {
   }
 
   const onSubmit = async (_data: HickingProps) => {
-    // set name and file to upload on supabase storage
+    // set name, path and file to upload on supabase storage
     let name: string | undefined = "";
     let image: File = {} as File;
     let path = ``;
@@ -59,14 +59,13 @@ const AdminForm = ({ difficulty }: HickingProps) => {
     ]);
     if (Error) {
       console.log(Error);
-      toast.error("not send");
+      toast.error("❌ not send");
     }
     if(data){
-      toast.success('Data send ... ')
+      toast.success('🚀 Data sent ... ')
       reset()
     }
   };
-
   return (
     <>
       <div>
